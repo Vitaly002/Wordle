@@ -7,8 +7,16 @@ import { useWordle } from "./hooks/useWordle";
 import { useEffect } from "react";
 
 export default function WordlePage() {
-  const { guesses, scores, currentGuess, status, onKey, resetGame } =
-    useWordle();
+  const {
+    guesses,
+    scores,
+    currentGuess,
+    shakeRow,
+    toast,
+    status,
+    onKey,
+    resetGame,
+  } = useWordle();
 
   useEffect(() => {
     function handleKeydown(e: KeyboardEvent) {
@@ -32,10 +40,18 @@ export default function WordlePage() {
     <div className="p-8 text-center">
       <h1 className="text-3xl font-bold mb-4">WORDLE</h1>
 
-      <Board guesses={guesses} scores={scores} currentGuess={currentGuess} />
+      <Board
+        guesses={guesses}
+        scores={scores}
+        currentGuess={currentGuess}
+        shakeRow={shakeRow}
+      />
+
       <Keyboard />
-      {/* <Toast />
-      <Dialog /> */}
+
+      <Toast message={toast} />
+
+      {/* <Dialog /> */}
     </div>
   );
 }

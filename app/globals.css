@@ -18,6 +18,58 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@keyframes shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-6px);
+  }
+  40% {
+    transform: translateX(6px);
+  }
+  60% {
+    transform: translateX(-4px);
+  }
+  80% {
+    transform: translateX(4px);
+  }
+}
+.shake {
+  animation: shake 300ms ease-in-out;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.pop {
+  animation: pop 120ms ease-out;
+}
+
+@keyframes flip {
+  0% {
+    transform: rotateX(0deg);
+  }
+  50% {
+    transform: rotateX(90deg);
+  }
+  100% {
+    transform: rotateX(0deg);
+  }
+}
+.flip {
+  animation: flip 500ms ease-in-out;
+}
+
 .tile {
   border: 2px solid rgba(0, 0, 0, 0.3);
   width: clamp(2.8rem, 7vw, 4rem);
@@ -25,8 +77,68 @@ body {
   font-size: clamp(1.6rem, 4.5vw, 2.2rem);
 }
 
+.tile.active {
+  border-color: rgba(0, 0, 0, 0.55);
+}
+
 @media (prefers-color-scheme: dark) {
   .tile {
     border-color: rgba(255, 255, 255, 0.25);
   }
+  .tile.active {
+    border-color: rgba(255, 255, 255, 0.55);
+  }
+}
+
+.tile-green {
+  background: #22c55e !important;
+  border-color: #16a34a !important;
+  color: white;
+}
+
+.tile-yellow {
+  background: #eab308 !important;
+  border-color: #ca8a04 !important;
+  color: white;
+}
+
+.tile-gray {
+  background: #525252 !important;
+  border-color: #404040 !important;
+  color: white;
+}
+
+.row .tile.flip:nth-child(1) {
+  animation-delay: 0ms;
+}
+.row .tile.flip:nth-child(2) {
+  animation-delay: 150ms;
+}
+.row .tile.flip:nth-child(3) {
+  animation-delay: 300ms;
+}
+.row .tile.flip:nth-child(4) {
+  animation-delay: 450ms;
+}
+.row .tile.flip:nth-child(5) {
+  animation-delay: 600ms;
+}
+
+.tile.revealed {
+  transition: background-color 0ms, border-color 0ms, color 0ms;
+}
+.row .tile.revealed:nth-child(1) {
+  transition-delay: 250ms;
+}
+.row .tile.revealed:nth-child(2) {
+  transition-delay: 400ms;
+}
+.row .tile.revealed:nth-child(3) {
+  transition-delay: 550ms;
+}
+.row .tile.revealed:nth-child(4) {
+  transition-delay: 700ms;
+}
+.row .tile.revealed:nth-child(5) {
+  transition-delay: 850ms;
 }

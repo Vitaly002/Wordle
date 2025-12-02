@@ -59,12 +59,15 @@ export function useWordle() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const [toast, setToast] = useState<string | null>(null);
+  const [shakeRow, setShakeRow] = useState<number | null>(null);
 
   function showError(msg: string) {
     setToast(msg);
+    setShakeRow(state.guesses.length);
 
     setTimeout(() => {
       setToast(null);
+      setShakeRow(null);
     }, 900);
   }
 
@@ -82,6 +85,10 @@ export function useWordle() {
       const data = await validateWord(currentGuess);
       console.log("Data returned: ", data);
 
+      if (!data.isvalidword) {
+        return showError("Invalid word");
+      }
+
       dispatch({
         type: "ADD_GUESS",
         word: currentGuess,
@@ -97,7 +104,7 @@ export function useWordle() {
       return;
     }
 
-    if (k === "ENTER") {
+    if (k === "ENTER" && !toast) {
       return submitGuess();
     }
     if (k === "DEL" && state.currentGuess.length !== 0) {
@@ -111,6 +118,7 @@ export function useWordle() {
   return {
     ...state,
     toast,
+    shakeRow,
     onKey,
     resetGame: () => dispatch({ type: "RESET" }),
   };
