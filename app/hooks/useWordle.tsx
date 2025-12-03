@@ -150,11 +150,10 @@ export function useWordle() {
     });
 
     const isWin = score.every((s) => s === 2);
+
     if (isWin) {
       dispatch({ type: "SET_STATUS", status: "win" });
-    }
-
-    if (state.guesses.length === MAX_GUESS) {
+    } else if (state.guesses.length === MAX_GUESS) {
       dispatch({ type: "SET_STATUS", status: "lose" });
     }
   }
