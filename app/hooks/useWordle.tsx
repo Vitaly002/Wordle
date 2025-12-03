@@ -1,7 +1,8 @@
 "use client";
 
 import { validateWord } from "@/actions/wordle";
-import { Score, Status } from "@/types/wordle";
+import { getScoreBasedColor } from "@/lib/color";
+import { KeyState, Score, Status } from "@/types/wordle";
 import { useReducer, useState } from "react";
 
 export const MAX_GUESS = 6;
@@ -12,6 +13,7 @@ type WordleState = {
   scores: Score[][];
   currentGuess: string;
   status: Status;
+  keyColors: Record<string, KeyState>;
 };
 
 type Action =
@@ -19,6 +21,7 @@ type Action =
   | { type: "DELETE" }
   | { type: "ADD_GUESS"; word: string; score: Score[] }
   | { type: "SET_STATUS"; status: Status }
+  | { type: "APPLY_KEY_COLORS"; updates: Record<string, KeyState> }
   | { type: "RESET" };
 
 const initialState: WordleState = {
@@ -26,6 +29,14 @@ const initialState: WordleState = {
   scores: [],
   currentGuess: "",
   status: "playing",
+  keyColors: {},
+};
+
+const colorRank = {
+  "": -1,
+  "tile-gray": 0,
+  "tile-yellow": 1,
+  "tile-green": 2,
 };
 
 function reducer(state: WordleState, action: Action): WordleState {
@@ -47,12 +58,39 @@ function reducer(state: WordleState, action: Action): WordleState {
     case "SET_STATUS":
       return { ...state, status: action.status };
 
+    case "APPLY_KEY_COLORS": {
+      const updatedKeyColors = { ...state.keyColors };
+      for (const [letter, nextColor] of Object.entries(action.updates)) {
+        const currentColor = updatedKeyColors[letter]?.color ?? "";
+        if (colorRank[nextColor.color] > colorRank[currentColor]) {
+          updatedKeyColors[letter] = nextColor;
+        }
+      }
+      return { ...state, keyColors: updatedKeyColors };
+    }
+
     case "RESET":
       return initialState;
 
     default:
       return state;
   }
+}
+
+function computeKeyUpdates(word: string, score: Score[]) {
+  const updates: Record<string, KeyState> = {};
+
+  word.split("").forEach((letter, i) => {
+    const nextColor = getScoreBasedColor(score[i]);
+
+    const currentColor = updates[letter]?.color ?? "";
+
+    if (colorRank[nextColor] > colorRank[currentColor]) {
+      updates[letter] = { color: nextColor };
+    }
+  });
+
+  return updates;
 }
 
 export function useWordle() {
@@ -83,8 +121,6 @@ export function useWordle() {
 
     try {
       const data = await validateWord(currentGuess);
-      console.log("Data returned: ", data);
-
       if (!data.isvalidword) {
         return showError("Invalid word");
       }
@@ -96,6 +132,30 @@ export function useWordle() {
       });
     } catch {
       showError("Oops! Something went wrong while checking your guess");
+    }
+  }
+
+  function onRowFlipEnd() {
+    const index = state.guesses.length - 1;
+    if (index < 0) {
+      return;
+    }
+
+    const word = state.guesses[index];
+    const score = state.scores[index];
+
+    dispatch({
+      type: "APPLY_KEY_COLORS",
+      updates: computeKeyUpdates(word, score),
+    });
+
+    const isWin = score.every((s) => s === 2);
+    if (isWin) {
+      dispatch({ type: "SET_STATUS", status: "win" });
+    }
+
+    if (state.guesses.length === MAX_GUESS) {
+      dispatch({ type: "SET_STATUS", status: "lose" });
     }
   }
 
@@ -121,5 +181,9 @@ export function useWordle() {
     shakeRow,
     onKey,
     resetGame: () => dispatch({ type: "RESET" }),
+    onRowFlipEnd,
+    keyboardColors: Object.fromEntries(
+      Object.entries(state.keyColors).map(([k, v]) => [k, v.color])
+    ),
   };
 }

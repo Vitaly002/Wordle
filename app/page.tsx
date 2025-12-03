@@ -16,6 +16,8 @@ export default function WordlePage() {
     status,
     onKey,
     resetGame,
+    keyboardColors,
+    onRowFlipEnd,
   } = useWordle();
 
   useEffect(() => {
@@ -45,13 +47,24 @@ export default function WordlePage() {
         scores={scores}
         currentGuess={currentGuess}
         shakeRow={shakeRow}
+        onRowFlipEnd={onRowFlipEnd}
       />
 
-      <Keyboard />
+      <Keyboard onKey={onKey} keyboardColors={keyboardColors} />
 
       <Toast message={toast} />
 
-      {/* <Dialog /> */}
+      <Dialog
+        show={status === "win"}
+        title="🎉 Correct Word!"
+        onClose={resetGame}
+      >
+        <p className="text-lg">You solved it!</p>
+      </Dialog>
+
+      <Dialog show={status === "lose"} title="😢 Game Over" onClose={resetGame}>
+        <p className="text-lg">Try again!</p>
+      </Dialog>
     </div>
   );
 }

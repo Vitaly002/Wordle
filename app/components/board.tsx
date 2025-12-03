@@ -6,6 +6,7 @@ type BoardProps = Readonly<{
   scores: number[][];
   currentGuess: string;
   shakeRow: number | null;
+  onRowFlipEnd?: () => void;
 }>;
 
 export default function Board({
@@ -13,6 +14,7 @@ export default function Board({
   scores,
   currentGuess,
   shakeRow,
+  onRowFlipEnd,
 }: BoardProps) {
   const rows = [
     ...guesses,
@@ -60,6 +62,8 @@ export default function Board({
                     tileIndex < currentGuess.length
                   }
                   revealed={revealed}
+                  {...(revealed &&
+                    tileIndex === 4 && { onFlipEnd: onRowFlipEnd })}
                 />
               );
             })}

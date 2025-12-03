@@ -1,3 +1,4 @@
+import { getScoreBasedColor } from "@/lib/color";
 import clsx from "clsx";
 
 type TileProps = Readonly<{
@@ -6,14 +7,14 @@ type TileProps = Readonly<{
   action: "pop" | "flip" | "shake" | null;
   active: boolean;
   revealed: boolean;
+  onFlipEnd?: () => void;
 }>;
 
 function getColorClass(score: number | undefined, revealed: boolean) {
-  if (!revealed) return "";
-  if (score === 2) return "tile-green";
-  if (score === 1) return "tile-yellow";
-  if (score === 0) return "tile-gray";
-  return "";
+  if (!revealed) {
+    return "";
+  }
+  return getScoreBasedColor(score);
 }
 
 export default function Tile({
@@ -22,6 +23,7 @@ export default function Tile({
   action,
   active,
   revealed,
+  onFlipEnd,
 }: TileProps) {
   const colorClass = getColorClass(score, revealed);
 
@@ -33,6 +35,11 @@ export default function Tile({
         colorClass,
         { active, revealed }
       )}
+      onAnimationEnd={() => {
+        if (action === "flip") {
+          onFlipEnd?.();
+        }
+      }}
     >
       {char}
     </div>
