@@ -40,7 +40,7 @@ export default function WordlePage() {
 
   return (
     <div className="p-8 text-center">
-      <h1 className="text-3xl font-bold mb-4">WORDLE</h1>
+      <h1 className="text-3xl font-bold mb-6">WORDLE</h1>
 
       <Board
         guesses={guesses}

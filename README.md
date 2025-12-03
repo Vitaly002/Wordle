@@ -98,4 +98,4 @@ npm run dev
 
 ### **Please follow the link below to play the deployed version of the game!**
 
-[TBD](https://wordle-apis.vercel.app/api/validate)
+[WORDLE](https://wordletoday.vercel.app/)

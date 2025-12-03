@@ -12,7 +12,7 @@ export default function Dialog({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-16 bg-black/50 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center pb-32 bg-black/50 backdrop-blur-[2px]">
       <div
         className="
           w-[90%] max-w-sm
