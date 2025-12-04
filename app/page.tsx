@@ -39,8 +39,8 @@ export default function WordlePage() {
   }, [onKey, status]);
 
   return (
-    <div className="px-8 text-center">
-      <h1 className="text-3xl font-bold my-6">WORDLE</h1>
+    <div className="min-h-screen px-8 text-center flex flex-col items-center justify-center">
+      <h1 className="text-3xl font-bold">WORDLE</h1>
 
       <Board
         guesses={guesses}

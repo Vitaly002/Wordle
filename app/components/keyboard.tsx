@@ -9,7 +9,7 @@ export default function Keyboard({
   keyboardColors: Record<string, string>;
 }>) {
   return (
-    <div className="mt-10">
+    <div className="w-full">
       {KEYS.map((row) => (
         <div key={row.join("")} className="flex justify-center gap-2 mb-2">
           {row.map((key) => {

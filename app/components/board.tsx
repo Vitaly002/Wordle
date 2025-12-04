@@ -40,7 +40,7 @@ export default function Board({
   }
 
   return (
-    <div className="grid gap-2 justify-items-center">
+    <div className="grid gap-2 justify-items-center m-14">
       {rows.map((row, rowIndex) => {
         const letters: string[] = row.padEnd(5).split("");
         const isGuessedRow = rowIndex < guesses.length;
